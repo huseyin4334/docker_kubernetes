@@ -155,3 +155,18 @@ docker <span style="color:orange">cp \<container_name:container_path> \<out_sour
   - log kayıtlarını local makinemize çıkarabiliriz.
 
 
+## Image Pull And Push
+- Aşağıdaki gibi işlemleri yaparsak image default registry olan docker hub'a gider.
+  - docker login
+  - docker push image_name:tag
+  - docker pull image_name:tag
+
+- Aşağıdaki gibi işlemleri yaparsak image login olunan image registry repo'suna gider
+  - docker login \<private_registry>
+  - docker push \<image_repo_address>/image_name:tag
+  - docker pull \<image_repo_address>/image_name:tag
+
+docker tag \<old_name>:tag \<new_name>:tag
+
+- push işleminde base image push olmaz. Extra işlemler pushlanır.
+- pull işleminde login olunmamış olursa otomatik docker hub'a bakılır.
