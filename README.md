@@ -223,3 +223,7 @@ inspect yaptığımızda Mountpoint ile gösterilen path docker'ın host makined
 
 
 ### NETWORKS IN DOCKER
+- 3 senaryomuz var
+  - www'ya istekte bulunma.
+  - host makinede çalışan uygulamaya istekte bulunma
+  - başka bir container'a istekte bulunma
