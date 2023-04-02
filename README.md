@@ -123,7 +123,8 @@ docker logs <span style="color:orange">-f</span>
 docker <span style="color:orange">attach \<container></span>
 - detach mode'da çalışan container'ı attach mode'a alır.
 
-docker <span style="color:orange">-it \<container></span>
+docker <span style="color:orange"> run -it \<image></span>
+docker <span style="color:orange"> exec -it \<container> sh</span>
 - interaktif bir terminal açar.
 - run komutu ilede kullanılabilir.
 
@@ -170,3 +171,52 @@ docker tag \<old_name>:tag \<new_name>:tag
 
 - push işleminde base image push olmaz. Extra işlemler pushlanır.
 - pull işleminde login olunmamış olursa otomatik docker hub'a bakılır.
+
+### Managing Data & Working With Volumes
+- Container silinmediği müddetçe volume mapping yapılmamış dosyalar silinmez.
+- Ancak konteynır silinmişse dosyalar uçar ve create olmuş dosyalar silinir.
+- Ancak bu dosyalar bize lazımsa volume mapping yapmak gerekir.
+- Volume çalışılan ortamda belirtilen yere kaydedilir. 
+- Image'de belirtilen yere bakılır ve volume dosyaları varsa konteynıra alınır.
+
+#### Volume Types
+- 2 tip volume mapping var.
+- Bind Mounts
+  - Managed by ourself
+- Volumes
+  - Managed by docker
+  - Anonymous Volumes
+  - Named Volumes
+
+##### Volumes
+- Docker bu kalıcı dosyalamayı yönetir. Nerede olduğunu bilmeyiz.
+
+docker <span style="color:orange">volumes</span>
+
+docker volumes <span style="color:orange">--help</span>
+
+create, ls, ps, inspect, rm, prune
+
+docker volumes <span style="color:orange">create feedback-files</span>
+
+inspect yaptığımızda Mountpoint ile gösterilen path docker'ın host makinede kurduğu sanal ortamın path'idir.(Linux değilse)
+
+##### Bind Mounts
+- Bind mounts dinamik değişkenlik gösteren kalıcı verilerin image'e gösterilmesinde ve kullanılmasında çok işe yarar.
+- Volumu docker tarafından kontrol edilirken bind mount kendimiz tarafından kontrol edilir.
+
+
+### Environment Variables And Arguments
+- Bu 2'sini ayıran özellik birinin build timeda birininde runtimeda çalışmasıdır.
+- ARG
+  - Build time argument
+  - Dockerfile içinde
+    - ARG şeklinde yazılır.
+  - Komutla değeri verirken
+    - --build-args
+- ENV
+  - Runtime environment variable
+  - Dockerfile içinde
+    - ENV şeklinde yazılır.
+  - Komutla değeri verirken
+    - --env
