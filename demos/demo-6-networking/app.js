@@ -68,7 +68,9 @@ app.get('/people', async (req, res) => {
 });
 
 mongoose.connect(
-  'mongodb://localhost:27017/swfavorites',
+  'mongodb://mongodb:27017/swfavorites', // dockerize and in same network
+  //'mongodb://host.docker.internal:27017/swfavorites', // not dockerize and in host machine
+  //'mongodb://localhost:27017/swfavorites', // this app not dockerize and mongo is in this url
   { useNewUrlParser: true },
   (err) => {
     if (err) {

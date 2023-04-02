@@ -225,5 +225,48 @@ inspect yaptığımızda Mountpoint ile gösterilen path docker'ın host makined
 ### NETWORKS IN DOCKER
 - 3 senaryomuz var
   - www'ya istekte bulunma.
+    - Global requestler container applerden dışarı yapılabilmektedir.
   - host makinede çalışan uygulamaya istekte bulunma
+    - localde çalışan container olmayan app'e direk localhost:../... şeklinde istek atılmaya kalkılırsa erişim sağlanamaz.
+    - Bu tür durumlarda docker'ın container içersinide host makinesinin ip adresini bilmesi için bir değer vardır. <span style="color:orange">host.docker.internal</span>
+    - Dönüşüm şu şekilde olacaktır;
+      - http://localhost:27017/......
+      - http://host.docker.internal:27017/.....
+    - Böylece istek host makinesine gidecektir.
   - başka bir container'a istekte bulunma
+    - Burada docker, container için bir internal ip adresi vermektedir.
+    - docker container inspect ....
+    - Buradaki ip adresini koda yazarak erişim sağlanabilir.
+    - Ancak her yeni containerda bu ip adresi değişeceğinden verimli bir çözüm yöntemi değildir.
+    - O sebeple diğer bir çözüm yönetimide container'ın adını kullanmaktır. Bu daha sabit bir değer sağlar. Tabi bunu yapabilmek için container'ların aynı network altında olması gerekmektedir.
+    - http://172.0.1.12:27017/.....
+    - http://mongodb:27017/.....
+
+#### Network Management
+
+docker run <span style="color:orange">--network my_network</span>
+
+> Proje kodunda url'de isteği container'ın adı ile belirtmek için bu 2 container'ında aynı ağ içerisinde olması gerekir.
+
+> Ayrıca sadece içerde kullanılan ve dışarıdan erişime ihtiyacın olmadığı container'lar için -p ile port mapping yapmaya ihtiyaç yoktur.
+
+
+Network Creation
+- Docker network'ü volume gibi otomatik oluşturmaz. Bu sebeple kullanmadan önce create etmek gerekir.
+- docker network --help
+- docker network create \<network-name>
+- docker create --driver bridge \<network-name>
+
+Docker also supports these alternative drivers - though you will use the "bridge" driver in most cases:
+
+- **host:** For standalone containers, isolation between container and host system is removed (i.e. they share localhost as a network)
+
+- **overlay:** Multiple Docker daemons (i.e. Docker running on different machines) are able to connect with each other. Only works in "Swarm" mode which is a dated / almost deprecated way of connecting multiple containers
+
+- **macvlan:** You can set a custom MAC address to a container - this address can then be used for communication with that container
+
+- **none:** All networking is disabled.
+
+Third-party plugins: You can install third-party plugins which then may add all kinds of behaviors and functionalities
+
+As mentioned, the "bridge" driver makes most sense in the vast majority of scenarios.
