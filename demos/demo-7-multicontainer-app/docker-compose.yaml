@@ -1,0 +1,24 @@
+version: '3.8' # https://docs.docker.com/compose/compose-file/
+
+services:
+  mongodb: # service name. But If we don't give containername, this will be container name too
+    image: 'mongo' # image name. Buraya ayrıca linkte girebiliriz.
+    volumes:
+      - mongo-data:/data/db
+    #environment:
+      # - MONGO_INITDB_ROOT_USERNAME: value
+      # - MONGO_INITDB_ROOT_PASSWORD: value
+      # - MONGO_INITDB_ROOT_USERNAME=value
+    env_file:
+      - ./env/mongo.env
+    #networks: # NETWORK TANIMINA İHTİYAÇ YOKTUR. ÇÜNKÜ DOCKER COMPOSE TÜM SERVİSLERİ TEK BİR NETWORK'E OTOMATİK TOPLAR.
+    #  - demo-7-network
+  backend:
+
+  frondend:
+
+volumes:
+  mongo-data: # volume create update burası ile olur. Burada belirtilmesinin önemli bir nedeni paylaşılabilir olmasıdır.
+
+# docker-compose up
+# docker compose down

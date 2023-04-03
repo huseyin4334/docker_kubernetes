@@ -270,3 +270,19 @@ Docker also supports these alternative drivers - though you will use the "bridge
 Third-party plugins: You can install third-party plugins which then may add all kinds of behaviors and functionalities
 
 As mentioned, the "bridge" driver makes most sense in the vast majority of scenarios.
+
+### Docker Compose
+- Docker compose tek bir konfigürasyon dosyasıyla ve aynı makinede birden fazla container'ı manage etmek için iyi bir araçtır.
+- Docker compose dockerfile yerine geçmez dockerfile'ı kullanır.
+- Docker compose'da container'lar servis olarak isimlendirilir.
+
+docker compose up
+- up olduğunda prefix olarak projenin dosya ismini kullanır.
+- bir network oluşturur.
+- volume varsa onu create eder.
+- default olarak attach modda başlar.
+  - docker-compose up -d ile mod değişebilir.
+
+docker compose down
+- komutu çalıştığında volume hariç, image, network gibi diğer şeyleri silecektir.
+- Yani otomatik bir şekilde --rm ile gelmektedir.
