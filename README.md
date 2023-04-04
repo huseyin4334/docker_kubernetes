@@ -286,3 +286,11 @@ docker compose up
 docker compose down
 - komutu çalıştığında volume hariç, image, network gibi diğer şeyleri silecektir.
 - Yani otomatik bir şekilde --rm ile gelmektedir.
+
+### Utility Containers
+- docker <span style="color:orange">exec</span>
+- Uygulama çalışmaya devam ederken container üzerinde kod çalıştırmamızı sağlar
+- Örneğin
+  - docker run -it -d node
+  - docker exec \<container> npm init
+  - docker exec [options] container [console_command]

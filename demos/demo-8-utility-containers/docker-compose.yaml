@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  npm-service:
+    build: ./
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/app
+    entrypoint: npm
+
+# docker-compose run npm-service    -> istenilen servisleri çalıştırmaya izin verir. up komutundan farklı docker run gibi çalışır. Bu sebeple down yapıldığında container silinmez.
+# docker-compose exec
+# docker-compose 
