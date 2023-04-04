@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  server: # that will take requests
+    image: 'nginx:1.22.1-alpine-slim' # web server
+    ports:
+      - '8000:80'
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro # Bu normalde otomatik setlenebilir. Ancak değişiklik yapabilmek adına böyle yapıldı.
+    depends_on:
+      - php
+      - mysql
+  
+  php: # code run and execute
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+    volumes:
+      - ./src:/var/www/html:delegated # bir değişiklik olduğunda anında makineye yansıtma. Gruplar halinde işlemi gerçekleştir. Performans için daha iyi.
+    ports:
+      - '9000:9000' # fastcgi_pass php:9000 -> şeklinde nginx.conf üzerinde tanımlandı. 9000 phpnin çıkış portudur.
+                    # Ayrıca port'u dışarı açmak zorunda değiliz.
+    depends_on:
+     - mysql
+  mysql:
+    image: mysql:5.7
+    env_file:
+      - ./env/mysql.env
+    volumes:
+      - mysql-data:/var/lib/mysql
+  composer:
+    build: 
+      context: ./dockerfiles
+      dockerfile: compose.dockerfile
+    volumes:
+      - ./src:/var/www/html   # composer bağımlılıkları kuracak ve src'ye yazacak. src güncellenince php container'ı bu bilgiyi alıp /var/www/html klasörünü güncelleyecek
+    # command: 'create-project --prefer-dist laravel/laravel'
+                              # Eğer burada command yazmazsam önce docker run --rm composer create-project --prefer-dist laravel/laravel .  şeklinde bir çalıştırma yöntemi izlemeliyim.
+
+  artisan:
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+    volumes:
+      - ./src:/var/www/html
+    entrypoint: [ "php", "var/www/html/artisan" ] # dockerfileda belirtilmemişse çalışır.
+  
+  npm:
+    image: node:14
+    working_dir: /var/www/html
+    entrypoint: ["npm"]
+    volumes:
+      - ./src:/var/www/html
+
+volumes:
+  mysql-data:
+
+
+# docker-compose run --rm composer create-project --prefer-dist laravel/laravel .
+# docker-compose up -d server php mysql
+# docker compose run --rm artisan migrate
