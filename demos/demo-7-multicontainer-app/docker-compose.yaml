@@ -1,8 +1,9 @@
 version: '3.8' # https://docs.docker.com/compose/compose-file/
 
 services:
-  mongodb: # service name. But If we don't give containername, this will be container name too
+  mongodb: # service name. Ayağa kalkan container'ın adı farklı olacaktır ancak erişim için servis ismi konteynırlar içerisinde kullanılabilir.
     image: 'mongo' # image name. Buraya ayrıca linkte girebiliriz.
+    container_name: mongodb # belirtilmezse <root_folder>_<service_name>_number
     volumes:
       - mongo-data:/data/db
     #environment:
@@ -13,12 +14,46 @@ services:
       - ./env/mongo.env
     #networks: # NETWORK TANIMINA İHTİYAÇ YOKTUR. ÇÜNKÜ DOCKER COMPOSE TÜM SERVİSLERİ TEK BİR NETWORK'E OTOMATİK TOPLAR.
     #  - demo-7-network
+  
   backend:
+    build: ./backend    # Bu kısa yoldur dockerfile'ın yolunu verir. default adıda Dockerfile'dır. Build image silinmediği sürece 1 kez yapılır.
+    #build:
+    #  context: ./backend
+    #  dockerfile: Dockerfile  # 'Dockerfile-dev' örnekteki gibi adı farklı olabilir
+    #  args:
+    #    some-arg: 1
+    ports:
+      - '80:80' # <host_port>:<docker_port> Ayrıca birden fazla porttan çıkış verebilirim.
+    volumes:
+      - backend-logs:/app/logs
+      - "./backend:/app"
+      - /app/node_modules
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - mongodb
 
-  frondend:
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - "./frontend/src:/app/src"
+      - /app/node_modules
+    stdin_open: true # -i
+    tty: true        # -t  -it
+    depends_on:
+      - backend
 
 volumes:
   mongo-data: # volume create update burası ile olur. Burada belirtilmesinin önemli bir nedeni paylaşılabilir olmasıdır.
+  backend-logs:
 
 # docker-compose up
 # docker compose down
+
+# Örneğin kod değişti ve yeniden build alınarak devam edilmesini istiyoruz.
+# docker-compose up --build (Build images before starting containers.)
+
+# Sadece build'e ihtiyacımız varsa
+# docker-compose build
