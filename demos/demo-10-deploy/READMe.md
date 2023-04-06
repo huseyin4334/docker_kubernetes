@@ -67,3 +67,24 @@
     - Çalışacağı cluster'a dair bilgiler.
 - FARGATE (compatibilities) (Task altında)
   - container'a istek geldikçe aktive etmeye yarıyor.
+
+# Docker Compose With Cloud
+- Docker compose ile işlem yapma hizmeti bulunmuyor. 
+- Bu sebeple uygulama için bir cluster oluşturulması ve vpc servisinin enable edilmesi gerekiyor.
+- vpc sayesinde aws aynı network altında belirtilen container'ların çalışacağını garanti ediyor. Böylece communication sağlanması için url sabitlenebiliyor.
+- Yani localdeki gibi servis veya container isimleriyle cloudda ilerleyemiyoruz.
+- Daha sonrasında çalışacak konteynırlar için task oluşturmak gerekiyor.
+- Aynı cluster içerisinide çalışan container'ların birbiriyle haberleşebilmeleri için **localhost** url'i kullanılabilir. (container name yerine geçiyor.) Aws böylece container'ların haberleşmesini sağlamaktadır.
+
+Artık tasklar hazır. Image'ler ile 1 mongodb ve backend kodu ekledik diyelim.
+- Şimdi sıra servis create etmekte.
+- App load balancer gibi uygulamaya erişim seçeneklerini burada ayarlıyoruz.
+
+# Volume Mapping
+- Volume 2 şekilde eklenebiliyor.
+  - Bind mount
+  - EFS (Elastic File System)
+    - Buda yine bir servistir.
+    - VPC (virtual private cloud) altında bir tane tanımlanır.
+    - Böylecek bu file system üzerinden volume mapping yapılmış olur.
+    - Security group ve inbound role tanımlamaları yapmak gerekiyor. Container'ların bu file system'a erişebilmesi için.

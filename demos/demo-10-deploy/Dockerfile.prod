@@ -1,0 +1,28 @@
+FROM node:14-alpine:14-alpine as build
+
+WORKDIR /app
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 80
+
+CMD ["npm", "run", "build"]
+
+FROM nginx:stable-alpine3.17
+
+# default dinlenilen yer -> /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 3000
+
+CMD [ "nginx", "-g", "daemon off;" ]
+
+# react browser'dan istek yapıyor.
+# http:localhost/goals -> localde bu şekilde demiştik.
+# /goals -> şeklinde yazıyoruz otomatik bir şekilde bulunulan url üzerinden gidecektir
+# https://....com/goals gibi.
+# docker build --target build -f dockerfiles/Dockerfile.prod ./frontend
