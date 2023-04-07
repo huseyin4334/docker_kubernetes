@@ -339,3 +339,15 @@ docker compose down
 - Worker Nodes
 - Install all required sotware
 - Kubectl (kube-control tool)
+
+- Minikube kurulumu için notlar
+  - https://phoenixnap.com/kb/install-minikube-on-centos
+  - https://stackoverflow.com/questions/48957195/how-to-fix-docker-got-permission-denied-issue
+  - https://stackoverflow.com/questions/61795050/pending-pod-on-minikube-kubernetes-insufficient-cpu
+  - https://stackoverflow.com/questions/26472586/upgrade-docker-on-centos-7
+- minikube start --driver=virtualbox -> for we are working in here.
+- minikube stop
+- minikube status
+- minikube dashboard
+  - That command will give ui for what have and happening in cluster
+
