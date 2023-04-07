@@ -321,7 +321,7 @@ docker compose down
   - Kube proxy
     - Incoming and outgoing network traffic everythig working desired.
 
-# Master Node
+### Master Node
 - API Server
   - API Server communicat with kubelet
 - Scheduler
@@ -332,3 +332,10 @@ docker compose down
    -  It's working with scheduler
 -  Cloud controller manager
    -  That's knows how to interact with Interact with Cloud provider resources
+
+### Kubernetes Installation
+- Cluster
+- Master Nodes
+- Worker Nodes
+- Install all required sotware
+- Kubectl (kube-control tool)
