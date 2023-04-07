@@ -294,3 +294,41 @@ docker compose down
   - docker run -it -d node
   - docker exec \<container> npm init
   - docker exec [options] container [console_command]
+
+
+## Kubernetes
+- 2 types nodes in kubernetes
+  - Master Node
+    - Altında worker node'ların kontrolünü sağlamak için bir çok tool vardır.
+  - Worker Node
+    - 2 thing in this node
+    - Proxy/config
+      - That's here for communication configuration.
+      - Container communicate and reachable from internet with this module 
+    - Pod
+      - Containers and volumes in here working.
+      - So here is container virtual environment.
+      - 1 container suggested.
+- It's called Cluster.
+
+### Worker Node
+- Pod
+  - containers
+  - Volumes
+  - Container Orchestration tool (Docker)
+  - Kubelet
+    - Communication between master and worker node
+  - Kube proxy
+    - Incoming and outgoing network traffic everythig working desired.
+
+# Master Node
+- API Server
+  - API Server communicat with kubelet
+- Scheduler
+  - That's control nodes for pods. Pod health check, recreate, create, scaling and so on.
+  - It's working with API server
+-  Kube controller manager
+   -  Watches and controls worker nodes, correct number of pods and more.
+   -  It's working with scheduler
+-  Cloud controller manager
+   -  That's knows how to interact with Interact with Cloud provider resources
