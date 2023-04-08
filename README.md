@@ -351,3 +351,25 @@ docker compose down
 - minikube dashboard
   - That command will give ui for what have and happening in cluster
 
+### Kubernetes Objects
+- Kubernetes with objects
+- This opjects;
+  - Pod
+  - Service
+  - Deployment
+  - ...
+
+#### Pod
+- Pod the smallest unit in kubernetes
+  - 1 or multi Containers run in this object
+  - Most common usage 1 container per pod
+- Pods contain shared resources
+  - Volumes etc.
+- Every pod have a cluster internal ip address by default
+  - If we using multi container in 1 pod. This containers communicate with each other via localhost
+  - So every pod is a local machine for containers. 
+- Pods are designed to be emphemeral. Kubernetes can delete, replace, start and stop them as needed
+- But for pods to be managed for us, we need a "controller" (Deployment)
+
+#### Deployment
+- This object being used for pods controlling.
