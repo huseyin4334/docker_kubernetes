@@ -373,3 +373,26 @@ docker compose down
 
 #### Deployment
 - This object being used for pods controlling.
+- Declerative and imperative usage
+
+Create command using for create a resource.
+
+kubectl create 
+
+deployment (resource)
+
+first-app (name)
+
+--image=<> (image_address or name)
+
+kubectl gey pods
+
+|Name     |Ready		     |Status			|Restart  |Age         |
+|---------|--------------------------|--------------------------|---------|------------|
+|Pod Name |Current State/Target State|What happening in this pod|0 or 1   |when created|
+
+
+
+
+
+
