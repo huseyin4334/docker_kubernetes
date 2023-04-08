@@ -447,3 +447,8 @@ kubectl get pods
 - we used before is **imperative kubernetes usage**.
 
 
+### Volumes In Kubernetes
+- State
+  - State is data created and used by your application which must not be lost
+  - User generated data
+  - Intermediate results derivered by app
