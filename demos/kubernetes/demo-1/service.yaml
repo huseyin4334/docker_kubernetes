@@ -1,0 +1,17 @@
+apiVersion: v1 # core/v1 
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: first-app-pod-label # connect pods with the tag app:first-app-pod-label
+  ports:
+  - port: 80 # Expose from this port
+    targetPort: 8080 # Listen this port
+    protocol: 'TCP'
+  type: ClusterIP # Load Balancer or NodePort can be used
+
+# kubectl apply -f ./service.yaml
+# If I change anything without name in this file and if i use apply command later. I do updated this resource
+# If I use kubectl delete command, I be deleted this resource.
+# kubectl delete -f ./service.yaml -> like create

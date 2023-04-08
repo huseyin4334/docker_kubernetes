@@ -377,22 +377,73 @@ docker compose down
 
 Create command using for create a resource.
 
-kubectl create 
+kubectl **create** 
 
-deployment (resource)
+**deployment** (resource)
 
-first-app (name)
+**first-app** (name)
 
---image=<> (image_address or name)
+**--image=<image_name>** (image_address or name)(Kubernetes looking docker hub)
 
-kubectl gey pods
+kubectl get pods
 
 |Name     |Ready		     |Status			|Restart  |Age         |
 |---------|--------------------------|--------------------------|---------|------------|
 |Pod Name |Current State/Target State|What happening in this pod|0 or 1   |when created|
 
 
+#### Service
+- Service expose pods to the cluster on externally
+- Pods an ip address internally. This ip change when pod replaced
+- Because of we need unchange with replacements and more reachable ip addresses
+- Services manage this for us. We connect to service. Service connect to pods.
+- Services know connected itself pods ip addresses
+- If we do this expose process with kubectl;
+  - kubectl **expose deployment first-app --type=ClusterIP --port=8080**
+  - We exposed this deployment with an service
+  - Type is clusterIP means, This service only reachable in cluster.
+  - Port means, this deployment exposed from
+- We can use for type;
+- ClusterIP
+  - Just reachable in cluster
+- NodePort
+  - This service opening to cluster outside
+- LoadBalancer
+  - This service opening to cluster outside
+  - But this service load balancing for services or pods
+- minikbe service \<service_name>
+  - This will give local ip address for connect this service
+  - Because in this cluster we can not see external ip address when **kubectl get service** called
 
+### Commands
+- kubectl create deployment
+- kubectl get deployment
+- kubectl get pods
+- kubectl get service
+- kubectl **delete** \<resource_name>(like deployment) \<name>
+- kubectl **expose** deployment \<name> \<port> and others
+- kubectl **scale** deployment/<deploy_name> --replicas=\<number>
+- kubectl **set image** deployment/<deploy_name> **kube-first-app=\<image_name>:tag**
+  - we identified deployment object with "deployment/" keyword
+  - at the end of the command we said, container_name=new_image_for_creating
+  - I we dont write tag. Kubernetes will say, I have already wirking with latest version. If we give tag, kubernetes will understand changed image and it will update deployment.
+- **Rollbacks And History**
+  - kubectl **rollout** --help
+    - Manage to rollout resources
+    - help command explain with detail
+  - kubectl rollout **status** deployment/<deploy_name>
+    - This command give us interactive what happining.
+  - kubectl rollout **undo** deployment/<deploy_name>
+    - Thats brings previous deploy
+  - **history**
+    - What did it do in this resource previous records
 
+### Rsource Definiton
+- we see how can we create resources and manage these.
+- But that usage complicate like docker and docker-compose usage too
+- We can write yaml file like docker-compose. And we can say the kubernetes. We write your resources in this file. Read and create or update resources with this file.
+
+- This usage is **declarative kubernetes usage**.
+- we used before is **imperative kubernetes usage**.
 
 

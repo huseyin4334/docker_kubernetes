@@ -1,0 +1,27 @@
+apiVersion: apps/v1 # that can change by kubernetes. That's last version. We can look at kubernetes docs
+kind: Deployment # we define kubernetes resource
+metadata:
+  name: first-app-try # kubectl create deployment first-app-try equals that.
+spec: # specifications for this resource. we define here how this deploy should be configure
+  replicas: 2 # default is 1. This size to be used initially.
+  
+  selector: # We need to give selector for find pods to control. we define match labels(tags)
+    #matchExpressions:
+    matchLabels: # We use this pod labels to match with this deployment. Deployments is very dynamic objects.
+      app: first-app-pod-label # We said, this deployment control pods with the tag app: first-app-pod-label.
+
+  template: # define the pods how that should be created
+    # kind: Pod -> I din't write this. Because deployment kind resource is define this.
+    metadata: # Every kubernetes resource have a metadata. Pod is too. Therefore We set metadata tag.
+      labels:
+        app: first-app-pod-label # We can define key value pair with labels
+    spec: # specification of pod
+      containers:
+        - name: myFirstApp
+          image: huseyin/first-app
+          livenessProbe: # This parameter will control health our container. If not health and not getting response from container. Thats will restart it or recreate.
+            httpGet:
+              path: /
+              port: 8080
+            periodSeconds: 3
+            initialDelaySeconds: 5 # send request and wait 5 seconds first time
