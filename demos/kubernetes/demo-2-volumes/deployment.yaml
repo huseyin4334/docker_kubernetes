@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      podName: story-pod
+  template:
+    metadata:
+      labels:
+        podName: story-pod
+    spec:
+      containers:
+      - name: story-container
+        image: huseyin/story-app
+        volumeMounts:
+        - mountPath: /app/story # here is our project folder in contaner.
+          name: story-volume # use volume named story-volume
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+      volumes:
+      - name: story-volume # volume name
+      emptyDir: {} # volume type -> We are defining empty. I's configure automatically. This type is open an empty directory. Containers is writing data here. 
+                   # If container terminated. Data can survive. But this directory is removed, when pod terminated,replaced or deleted.
+                   # If we use this and we have more than 1 replica. These pods not share data. Every pod reads and writes to their files. Every one is attached own files to this volumes.
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: story-app-service
+spec:
+  selector:
+    podName: story-pod
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: "TCP"

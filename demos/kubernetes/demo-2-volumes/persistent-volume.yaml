@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      podName: story-pod
+  template:
+    metadata:
+      labels:
+        podName: story-pod
+    spec:
+      containers:
+      - name: story-container
+        image: huseyin/story-app
+        volumeMounts:
+        - mountPath: /app/story # here is our project folder in contaner.
+          name: story-volume # use volume named story-volume. But we are using now shared data.
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+      volumes: # https://kubernetes.io/docs/concepts/storage/volumes/#hostpath
+      - name: story-volume # volume name
+        persistentVolumeClaim: 
+          claimName: story-pv-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: story-app-service
+spec:
+  selector:
+    podName: story-pod
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: "TCP"
+
+---
+
+apiVersion: v1 # https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+kind: PersistentVolume # Through that, we can volume mapping in cluster level. In this way, every pods inside of nodes can use this volume.
+metadata:
+  name: story-persistent-volume
+spec:
+  capacity:
+    storage: 1Gi # I give 1Gi capacity for this volume.
+  volumeMode: Filesystem # Block is other type.
+  storageClassName: standard
+  accessModes:
+  - ReadWriteOnce # That means, read write by only one node
+  # - ReadWriteMany # That means, read write by multi node. We are using one node in local with minikube. Therefore we don't give this now.
+  # - ReadOnlyMany # That means, just read by multi node. We are using hostPath now. Therefore, we can't give this. Because we want to persist data. So write the host path directory.
+  hostPath:
+    path: ./data
+    type: DirectoryOrCreate
+
+---
+
+apiVersion: v1 # we need claims to attach persistent volume to pods
+kind: PersistentVolumeClaim # Thats a volume in pod. And It's read an write form persistent volume storage.
+metadata:
+  name: story-pv-claim
+spec:
+  volumeName: story-persistent-volume # That's a static volume mapping.
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 500Mb
+  volumeMode: Filesystem
+
+# kubectl get pv
+# kubectl get pvc

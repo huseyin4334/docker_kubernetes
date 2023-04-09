@@ -16,8 +16,8 @@ spec: # specifications for this resource. we define here how this deploy should 
         app: first-app-pod-label # We can define key value pair with labels
     spec: # specification of pod
       containers: # That get array. Therefore we using "-" character.
-        - name: myFirstApp
-          image: huseyin/first-app
+      - name: myFirstApp
+        image: huseyin/first-app
         #- name: first-2
         #  image: huseyin/first-app
 

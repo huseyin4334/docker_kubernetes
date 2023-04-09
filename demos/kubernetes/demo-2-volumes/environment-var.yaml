@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      podName: story-pod
+  template:
+    metadata:
+      labels:
+        podName: story-pod
+    spec:
+      containers:
+      - name: story-container
+        image: huseyin/story-app
+        env: # Environment variables can define like key value pairs. key is name, value is value.
+        #- name: STORY_PATH     # Thats with normal definition
+        #  value: 'story'
+        - name: STORY_PATH      # Thats with configmap
+          valueFrom:
+            configMapKeyRef:
+              name: story-configs
+              key: STORY_PATH
+        #- name: STORY_PATH     # Thats with secret
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: story-secret
+        #      key: STORY_PATH
+        volumeMounts:
+        - mountPath: /app/story # here is our project folder in contaner.
+          name: story-volume # use volume named story-volume. But we are using now shared data.
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+      volumes: # https://kubernetes.io/docs/concepts/storage/volumes/#hostpath
+      - name: story-volume # volume name
+      hostPath:    # volume type -> This type allows us to give path from host machine. EmtyDir is good for 1 replicas. But hostDir is good for node. Because. 
+        path: ./data      # host machine path. That's like bind mount       # share data in pods of node throuh host machine. Because nodes is seperate in cloud.
+        type: DirectoryOrCreate   # If exist this directory use it. If don't exist, create a directory with this name.
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: story-configs
+data:
+  STORY_PATH: "story"
+  # key: value
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: story-secret
+type: Opaque
+data:
+  STORY_PATH: c3Rvcnk= # encoded story with base64
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: story-app-service
+spec:
+  selector:
+    podName: story-pod
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: "TCP"

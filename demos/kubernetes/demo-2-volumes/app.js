@@ -6,7 +6,9 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-const filePath = path.join(__dirname, 'story', 'text.txt');
+const path = process.env.STORY_FOLDER ? process.env.STORY_FOLDER : 'story';
+
+const filePath = path.join(__dirname, path, 'text.txt');
 
 app.use(bodyParser.json());
 

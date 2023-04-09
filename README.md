@@ -452,3 +452,29 @@ kubectl get pods
   - State is data created and used by your application which must not be lost
   - User generated data
   - Intermediate results derivered by app
+- Volumes have 2 type in general
+  - Local volumes
+  - Cloud provider specific volumes
+- Volumes lifetime depends on the pod lifetime
+  - Volume survive container restart
+  - Volumes are removed when pods are destroyed
+- Kubernetest support so many volume types. (Broad variety)
+  - These types are changing with platform.
+  - AWS, Azure and so on.
+  - I write csi, emptyDir, hostPath
+  - https://kubernetes.io/docs/concepts/storage/volumes/
+
+Kubernetes have 2 types volumes. Regular and persistante.
+
+CSI type to attach any kind of storage to your cluster.
+Persistent volumes provide to volume mapping in cluster.
+Persistent volumes is volume areas. That's working like storage in cluster.
+Persistent claims in pods. PC is attach to persistent volume.
+
+- **kubectl get sc**
+  - Storage class
+  - A StorageClass provides a way for administrators to describe the "classes" of storage they offer.
+- **kubectl get pv**
+  - Persistance volumes
+- **kubectl get pvc**
+  - Persistance volume claims
