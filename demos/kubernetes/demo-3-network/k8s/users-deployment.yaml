@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-app
+  template:
+    metadata:
+      labels:
+        app: users-app
+    spec:
+      containers:
+        - name: users-app
+          image: huseyin/kub-demo-users:latest
+          env:    
+            - name: AUTH_ADDRESS
+              #value: localhost    # Containers work in pod like in host machine. So we can use container name in our project for connection
+              value: auth-service  # If we use pod by pod connection, our container can find with service. Because pod name is changeable.
+                                   # Kubernetes generate a env variable for service. AUTH_SERVICE_SERVICE_HOST. We can add this variable in project and use it atomatically.
+        #- name: auth-app
+        #  image: huseyin/kub-demo-auth:latest
