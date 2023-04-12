@@ -1,0 +1,71 @@
+
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: efs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: FileSystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  csi:
+    driver: efs.csi.aws.com # we can find from github.
+    volumeHandle: fs-59d14521 # we connect this cloud volume through csi driver. We can use this with other cloud providers too. This example done with aws EFS
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: users-app
+  template:
+    metadata:
+      labels:
+        app: users-app
+    spec:
+      containers:
+        - name: users-app
+          image: huseyin/kub-demo-users:latest
+          env:    
+            - name: AUTH_ADDRESS
+              #value: localhost              
+              value: "auth-service.default:3000"
+          volumeMounts:
+            - name: efs-volume
+              mountPath: /app/users
+          resources:
+            limits:
+              memory: 200Mi
+              cpu: 500Mb
+      volumes:
+        - name: efs-volume
+          persistentVolumeClaim:
+            claimName: efs-pvc 
+
+---
+
+apiVersion: v1
+kind: PersistantVolumeClaim
+metadata:
+  name: efs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  resources:
+    capacity: 5Gi

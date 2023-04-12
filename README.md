@@ -478,3 +478,8 @@ Persistent claims in pods. PC is attach to persistent volume.
   - Persistance volumes
 - **kubectl get pvc**
   - Persistance volume claims
+
+### AWS EKS Deployment
+- ECS (Elastic Container Service)
+  - That's for container deployment
+- EKS (Elastic Kubernetes Service)
